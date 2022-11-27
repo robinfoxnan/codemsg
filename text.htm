@@ -1,0 +1,228 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />     
+<meta name="apple-mobile-web-app-capable" content="yes" />    
+<meta name="format-detection" content="telephone=no" /> 
+
+<link rel="stylesheet" type="text/css" href="utils/share.css" />
+<style type="text/css">
+.textarea{
+height:160px;
+width:95%;
+font-size:18px; 
+color:green;
+}
+.input{
+width:95%;
+font-size:18px;
+}
+
+
+</style>
+<title>嘻嘻哈哈</title>
+<base target="_blank" />
+
+
+<script type="text/javascript" src="utils/jquery-3.3.1.min.js" ></script>
+
+<script type="text/javascript" src="utils/nativeShare.js" ></script>
+
+<script type="text/javascript" src="utils/cryptojs/crypto-js.js" ></script>
+
+<script type="text/javascript" src="utils/clipboard.min.js"></script>
+
+</head>
+
+
+<body>
+<script type="text/javascript">
+         function  mymethon(){
+                alert("触发点击事件");
+           }
+</script>
+ 
+  <textarea id="txt1" class="textarea">请输入</textarea>
+		<br>
+  约定：<br>
+  <input class="input" id="key-input" />
+		<br><br>
+		
+        <button type="button" onclick="btn1()" id="btn1">加密文本</button>
+		
+		<button  type="button" onclick="btn2()" id="btn2">解密文本 </button>
+		<button  type="button" onclick="clearTxt()" id="btn3">清空文本 </button>
+		<br>
+		<br>
+		
+		
+		
+<script type="text/javascript" >
+
+
+
+//方法一：
+        //获取url中的参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+		
+		function encrypt(message, keyStr) {
+		//var keyHex = CryptoJS.enc.Utf8.parse(key);
+		
+			var msg = CryptoJS.enc.Utf8.parse(message);
+			var ciphertext = CryptoJS.AES.encrypt(msg, keyStr);
+			
+			//console.log(message);
+			//console.log(keyStr);
+			//console.log(ciphertext.toString());
+			//console.log(decrypt(ciphertext.toString(), keyStr));
+			
+			return {
+				key: keyStr,
+				value: ciphertext.toString()
+			}
+			
+		}
+
+		
+		function SaveKey()
+		{
+			var key = document.getElementById('key-input').value
+			localStorage.setItem('RX-KEY', key);
+		}
+
+		function decrypt(message, key) {
+			var bytes = CryptoJS.AES.decrypt(message.toString(), key);
+			var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+			
+			//console.log(message);
+			//console.log(key);
+			//console.log(plaintext);
+			
+			return plaintext;
+		}
+		
+		window.onload = function()
+		{
+			//console.log('load');
+			//console.log(getUrlParam('msg'));
+			
+			var key = localStorage.getItem('RX-KEY');
+			document.getElementById('key-input').value = key;
+			
+			document.getElementById('txt1').value= getUrlParam('msg');
+		}
+		function isEmpty(obj){
+			if(typeof obj == "undefined" || obj == null || obj == ""){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		function btn1()
+		{
+			var txt1 = document.getElementById('txt1').value;
+			var key = document.getElementById('key-input').value;
+			SaveKey();
+			
+			if (isEmpty(txt1) || isEmpty(key))
+			{
+			   document.getElementById('txt2').value = '';
+			   return;
+			}
+			
+			//console.log(txt1);
+			 var eMsg = encrypt(txt1, key);
+			//console.log(eMsg.value);
+			document.getElementById('txt2').value  = eMsg.value;
+			return eMsg.value;
+		}
+		function btn2()
+		{
+			var txt1 = document.getElementById('txt1').value;
+			var key = document.getElementById('key-input').value;
+			SaveKey();
+			
+			if (isEmpty(txt1) || isEmpty(key))
+			{
+			   document.getElementById('txt2').value = '';
+			   return;
+			}
+			
+			var eMsg = decrypt(txt1, key);
+			console.log(eMsg);
+			document.getElementById('txt2').value  = eMsg;
+		}
+		
+		function clearTxt()
+		{
+			console.log('clar');
+			document.getElementById('txt1').value  = '';
+			document.getElementById('txt2').value  = '';
+		}
+		
+		function getText()
+		{
+			return document.getElementById('txt2').value;
+		}
+		
+		function Share2Weixin()
+	   {
+					var config = {
+						url: 'http://robinfoxnan.gz01.bdysite.com/text.htm?msg=' + getText(), //分享url
+						title: '嘻嘻哈哈的分享', //内容标题
+						desc: '好友的分享', //描述
+						img: '', //分享的图片
+						img_title: '新消息', //图片名称
+						from: ' 发' //来源
+					};
+					
+					console.log('share');
+					
+					
+					var share_obj = new nativeShare('nativeShare', config);
+					$(".am-share").addClass("am-modal-active");
+					if ($(".sharebg").length > 0) {
+						$(".sharebg").addClass("sharebg-active");
+					} else {
+						$("body").append('<div class="sharebg"></div>');
+						$(".sharebg").addClass("sharebg-active");
+					}
+					$(".sharebg-active,.share_btn").click(function() {
+						$(".am-share").removeClass("am-modal-active");
+						setTimeout(function() {
+							$(".sharebg-active").removeClass("sharebg-active");
+							$(".sharebg").remove();
+						}, 300);
+					})
+			}
+
+      
+</script>
+       
+        <textarea id="txt2" class="textarea">翻译结果</textarea>
+		<br><br>
+		<button class="btn" data-clipboard-action="copy" data-clipboard-target="#txt2">复制到剪切板 </button>
+		<button type="button" onclick="Share2Weixin()" id="btn5">分享结果 </button>
+		
+		<div id="nativeShare"></div>
+<script>
+
+var clipboard = new ClipboardJS('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+</script>
+
+</body>
+</html>
