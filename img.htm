@@ -1,27 +1,25 @@
 <html>
 <head>
  <style>
-  input {
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 400px;
-    z-index: 999;　
-    border-style:dashed;
-   border-width: 5px;
-   border-color: red;
-   text-align: center;
-}
-    </style>
+
+.file-box{ position:relative;width:340px}
+
+.txt{ height:22px; border:1px solid #cdcdcd; width:180px;}
+
+.btn{ background-color:#FFF; border:1px solid #CDCDCD;height:24px; width:70px;}
+
+.file{ position:absolute; top:0; right:80px; height:24px; filter:alpha(opacity:0);opacity: 0;width:260px }
+
+.img{ position:absolute; top:0; right:80px; height:24px; filter:alpha(opacity:0);opacity: 0;width:500px }
+</style>
 </head>
 <body>
- <p>点击设置图片：</p>
+ <p>点击按钮选择图片</p>
  <br/>
-<img id="image" src=""/>
-<br/>
+
 <input type="file" onchange="selectImage(this);"/>
+<br/>
+<img id="image" src="" width="500px" />
 <br/>
 <script>
     var image = '';
@@ -40,3 +38,4 @@
 </script>
 </body>
 </html>
+
